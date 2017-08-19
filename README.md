@@ -20,5 +20,5 @@ Just select something, and hit "set workplane" - a grid will show up, its a visu
 
 Observe how the workplane adapts to the view
 
-![view_adapt](https://github.com/BenjaminSauder/Workplane/blob/master/doc/view_adapt.png)
+![view_adapt](https://github.com/BenjaminSauder/Workplane/blob/master/doc/view_adapt.gif)
 
