@@ -13,7 +13,8 @@ def ensure_updater_running():
 
 class SetWorkPlane(bpy.types.Operator):
     """Sets a new workplane orientation"""
-    bl_idname = "workplane.set_workplane"
+
+    bl_idname = "transform.workplane_set"
     bl_label = "Set the Workplane"
     bl_options = {'REGISTER', 'UNDO'}
   
@@ -67,9 +68,9 @@ class SetWorkPlane(bpy.types.Operator):
             
     def execute(self, context):
         
-        print("--- execute ---")
-        print(self.transform_orientation)
-        print(self.pivot_point)
+        #print("--- execute ---")
+        #print(self.transform_orientation)
+        #print(self.pivot_point)
         
         center = self.find_center(context)
         matrix = self.set_transform_orientation(context, self.transform_orientation)
@@ -82,8 +83,8 @@ class SetWorkPlane(bpy.types.Operator):
 
         ensure_updater_running()
 
-        print (bpy.ops.workplane.set_workplane.poll())
-        print("--- invoke ---")
+        #print (bpy.ops.transform.set_workplane.poll())
+        #print("--- invoke ---")
                    
         center = self.find_center(context)
         orientation = self.find_orientation(context)
@@ -91,7 +92,7 @@ class SetWorkPlane(bpy.types.Operator):
         
         matrix = self.set_transform_orientation(context, orientation)
         
-        print(self.transform_orientation)
+        #print(self.transform_orientation)
        
         self.set_workplane_matrix(matrix, center)
         
@@ -108,7 +109,7 @@ class SetWorkPlane(bpy.types.Operator):
         
     
     def set_transform_orientation(self, context, transform_orientation):
-        print("catching space: " + transform_orientation) 
+        #print("catching space: " + transform_orientation) 
         
         #op.create_orientation doesn't work if nothing is selected, so I missuse the view orientation a bit to cicumvent
         use_view = transform_orientation == "VIEW" or transform_orientation.endswith("_EMPTY")
@@ -224,7 +225,7 @@ def working_in_workplane(context):
     return False
 
 class WorkplaneTranslate(bpy.types.Operator):
-    bl_idname = "workplane.translate"
+    bl_idname = "transform.workplane_translate"
     bl_label = "Translate on the Workplane"
     bl_description = ""
     bl_options = {"REGISTER"}
@@ -249,7 +250,7 @@ class WorkplaneTranslate(bpy.types.Operator):
 
 
 class WorkplaneRotate(bpy.types.Operator):
-    bl_idname = "workplane.rotate"
+    bl_idname = "transform.workplane_rotate"
     bl_label = "Rotates on the Workplane"
     bl_description = ""
     bl_options = {"REGISTER"}
@@ -273,7 +274,7 @@ class WorkplaneRotate(bpy.types.Operator):
 
             
 class WorkplaneScale(bpy.types.Operator):
-    bl_idname = "workplane.scale"
+    bl_idname = "transform.workplane_scale"
     bl_label = "Scales on the Workplane"
     bl_description = ""
     bl_options = {"REGISTER"}

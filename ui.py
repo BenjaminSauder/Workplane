@@ -16,13 +16,13 @@ class WorkplanePanel():
         layout = self.layout            
 
         col = layout.column(align=True)        
-        col.operator("workplane.set_workplane", text="Set workplane")
+        col.operator("transform.workplane_set", text="Set workplane")
         layout.prop(context.scene, "workplane_visible", toggle=False, text="Display Workplane") 
            
         col = layout.column(align=True)        
-        col.operator("workplane.translate", text="Translate")
-        col.operator("workplane.rotate", text="Rotate")
-        col.operator("workplane.scale", text="Scale") 
+        col.operator("transform.workplane_translate", text="Translate")
+        col.operator("transform.workplane_rotate", text="Rotate")
+        col.operator("transform.workplane_scale", text="Scale") 
               
               
 class WorkplanePanelTransform(WorkplanePanel, bpy.types.Panel):
