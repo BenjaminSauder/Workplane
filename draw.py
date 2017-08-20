@@ -31,17 +31,17 @@ def setup():
     zero = Matrix()
     zero.zero()
     
-    print(view_matrix)
+    #print(view_matrix)
 
     if view_matrix != zero:
-        print("found matrix display")        
+        #print("found matrix display")        
         global matrix
         matrix = view_matrix 
 
         enable()
         
 
-    print ("setup done")
+    #print ("setup done")
 
 
 def enable():
@@ -115,7 +115,7 @@ def draw_callback_view():
     #matrix.translation = middle
     #draw_point_3d(magenta, middle)
 
-    dist = 0
+    dist = 500
     for co in coords:
         intersection = screen_coord_to_workplane_intersection(region, rv3d, co)
         #vec = region_2d_to_vector_3d(region, rv3d, co)
@@ -123,10 +123,12 @@ def draw_callback_view():
         #x = intersect_line_plane(loc, loc+vec, matrix.translation, matrix.col[2] )
         if intersection and middle:
             d = (middle - intersection).length            
-            dist += d
+            dist = min(d, dist)
+            #dist += d
             #draw_point_3d(magenta, x)
     
-    dist /= 4
+    #dist /= 4
+    
     amount = int(dist) * 2 
     amount = min(amount, 1000) #cap this...
     amount += 20 - (amount % 20) #round to next even 10
@@ -153,7 +155,7 @@ def draw_callback_view():
         alpha = math.pow(4, scale) * math.pow(x *(1-x), scale)        
         
 
-        gray = (1.0, 1.0, 1.0, alpha * 0.1 )
+        gray = (1.0, 1.0, 1.0, alpha * 0.2 )
 
         if i % step != 0:
             continue

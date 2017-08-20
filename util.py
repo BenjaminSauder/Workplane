@@ -2,10 +2,6 @@ import bpy
 
 from workplane.data import *
 
-def test():
-    print(work_plane)
-
-
 def all_view3d(func):
     context = bpy.context
 

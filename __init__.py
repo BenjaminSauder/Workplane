@@ -30,7 +30,6 @@ else:
 
 import bpy
 
-
 classes = [
     data.WorkplaneProperties, 
     update.WorkPlaneUpdater,
@@ -78,11 +77,9 @@ def register():
     #            bpy.ops.workplane.internal_workplane_updater(override)
     #            break
     
-    util.test()
 
 def unregister():
     update.WorkPlaneUpdater.Running = False
-
     draw.disable()
      
     for c in classes:
