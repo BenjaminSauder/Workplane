@@ -220,7 +220,8 @@ class SetWorkPlane(bpy.types.Operator):
 
 def working_in_workplane(context):
 
-    if context.space_data.current_orientation is not None:
+    if (context.space_data.current_orientation is not None and
+        WorkPlaneUpdater.current_view is not None):
         return context.space_data.current_orientation.name == workplane.data.work_plane
     return False
 
