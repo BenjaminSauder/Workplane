@@ -6,14 +6,7 @@ The main idea is that it allows for quickly setting up a custom transform orient
 
 This addon does not recreate the default operations like translate/rotate/scale it merely calls the ones blender offers and sets the constraint axis and transform orientation for you.
 
-## Installation
-Just enable the addon under 3D View > Workplane
 
-![enable_addon](https://github.com/BenjaminSauder/Workplane/blob/master/doc/enable_addon.png)
-
-The tools itself is under 3D View > Sidebar Tools > Workplane
-
-![tool_bar](https://github.com/BenjaminSauder/Workplane/blob/master/doc/tool_bar.png)
 
 ## Usage
 Just select something, and hit "set workplane" - a grid will show up, its a visualisation on what plane you would work on if you would start an transform operation.
@@ -24,3 +17,19 @@ Observe how the workplane adapts to the view
 
 ![view_adapt](https://github.com/BenjaminSauder/Workplane/blob/master/doc/view_adapt.gif)
 
+
+Here is a mini example, set workplane to polygon, inset face then move the newly inseted face, but as you see it automatically uses the right axis constraints, thus keeps the correct alignement to the polygon. 
+
+![example](https://github.com/BenjaminSauder/Workplane/blob/master/doc/example.gif)
+
+
+
+
+## Installation
+Just enable the addon under 3D View > Workplane
+
+![enable_addon](https://github.com/BenjaminSauder/Workplane/blob/master/doc/enable_addon.png)
+
+The tools itself is under 3D View > Sidebar Tools > Workplane
+
+![tool_bar](https://github.com/BenjaminSauder/Workplane/blob/master/doc/tool_bar.png)
