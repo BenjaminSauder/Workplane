@@ -1,5 +1,3 @@
 *.pyc
-addons/workplane/.idea/
 *.sublime-workspace
-addons/workplane/workplane_project
 *.sublime-project
