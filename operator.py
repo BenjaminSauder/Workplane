@@ -70,6 +70,7 @@ class SetWorkPlane(bpy.types.Operator):
         #print("--- execute ---")
         #print(self.transform_orientation)
         #print(self.pivot_point)
+
         
         center = self.find_center(context)
         matrix = self.set_transform_orientation(context, self.transform_orientation)
@@ -82,6 +83,8 @@ class SetWorkPlane(bpy.types.Operator):
 
         ensure_updater_running()
 
+        workplane.data.set_user_transform_orientation()
+        print( workplane.data.get_user_transform_orientation() )
         #print (bpy.ops.transform.set_workplane.poll())
         #print("--- invoke ---")
                    
@@ -334,4 +337,27 @@ class WorkplaneHide(bpy.types.Operator):
         #context.scene.workplane_visible = False
         return {"FINISHED"}
 
+class WorkplaneDisable(bpy.types.Operator):
+    bl_idname = "transform.workplane_disable"
+    bl_label = "Disables the Workplane"
+    bl_description = ""
+    bl_options = {"REGISTER"}
+    
+    @classmethod
+    def poll(cls, context):
+        return working_in_workplane(context)
+        
+    def invoke(self, context, event):    
+        ensure_updater_running()
 
+        t_o = workplane.data.get_user_transform_orientation()
+        
+        if t_o == workplane.data.work_plane:
+            t_o = 'GLOBAL'
+            
+        try:
+            bpy.context.space_data.transform_orientation = t_o
+        except Exception as e:
+            bpy.context.space_data.transform_orientation = 'GLOBAL'
+       
+        return {"FINISHED"}

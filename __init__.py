@@ -34,6 +34,7 @@ classes = [
     data.WorkplaneProperties, 
     update.WorkPlaneUpdater,
     operator.SetWorkPlane,
+    operator.WorkplaneDisable,
     operator.WorkplaneTranslate,
     operator.WorkplaneRotate,
     operator.WorkplaneScale,
@@ -61,6 +62,7 @@ def register():
                      
     bpy.types.Scene.workplane_visible = bpy.props.BoolProperty(name="workplane_visible", default=True)
     
+    bpy.types.Scene.workplane_user_transform_orientation = bpy.props.StringProperty(name="workplane_user_transform_orientation", default="GLOBAL")
 
     for c in classes:
         bpy.utils.register_class(c)

@@ -54,9 +54,11 @@ def get_grid_view3d():
     )
 
    
+def get_user_transform_orientation():
+    return bpy.context.scene.workplane_user_transform_orientation
    
-   
-   
+def set_user_transform_orientation():
+    bpy.types.Scene.workplane_user_transform_orientation = bpy.context.space_data.transform_orientation      
    
    
    
