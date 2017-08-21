@@ -62,7 +62,12 @@ def register():
                      
     bpy.types.Scene.workplane_visible = bpy.props.BoolProperty(name="workplane_visible", default=True)
     
+   
     bpy.types.Scene.workplane_user_transform_orientation = bpy.props.StringProperty(name="workplane_user_transform_orientation", default="GLOBAL")
+  
+
+    bpy.types.Scene.workplane_preview_mode = bpy.props.EnumProperty(items=draw.MODE)
+   
 
     for c in classes:
         bpy.utils.register_class(c)

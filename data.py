@@ -61,6 +61,9 @@ def set_user_transform_orientation():
     bpy.types.Scene.workplane_user_transform_orientation = bpy.context.space_data.transform_orientation      
    
    
+def is_simple_preview():
+    return bpy.context.scene.workplane_preview_mode == "SIMPLE"
+   
    
    
    

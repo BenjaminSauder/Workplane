@@ -128,12 +128,12 @@ class WorkPlaneUpdater(bpy.types.Operator):
         global active_plane
         active_plane = "XY"
 
-        if constraints == (True, False, True):                    
+        if constraints == (True, False, True) and not workplane.data.is_simple_preview():                    
             active_plane = "XZ"
             rot = mathutils.Matrix.Rotation(math.radians(90.0), 4, X)
             workplane.draw.matrix = workplane_matrix * rot
             
-        if constraints == (False, True, True):                    
+        if constraints == (False, True, True) and not workplane.data.is_simple_preview():                    
             active_plane = "YZ"
             rot = mathutils.Matrix.Rotation(math.radians(90.0), 4, Y )
             workplane.draw.matrix = workplane_matrix * rot

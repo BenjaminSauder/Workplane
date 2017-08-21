@@ -13,6 +13,11 @@ init = False
 handle_view = None
 matrix = Matrix()
 
+MODE = [
+    ("SIMPLE", "Simple", "", 1),
+    ("FULL", "Full", "", 2)
+    ]
+
 #some code here is from space_view3d_math_vis
 def tag_redraw_all_view3d():
     workplane.util.all_view3d( lambda region: region.tag_redraw() )
@@ -141,6 +146,9 @@ def draw_callback_view():
         step = 5
     elif amount >= 256:
         step = 2
+    
+    if workplane.data.is_simple_preview():
+        amount = 20
 
     half = int((amount - (amount % step)) * 0.5)  
     offset = Vector((-half, -half, 0))

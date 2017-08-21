@@ -18,8 +18,13 @@ class WorkplanePanel():
         col = layout.column(align=True)        
         col.operator("transform.workplane_set", text="Set workplane")
         col.operator("transform.workplane_disable", text="Disable workplane")
+                
+        col = layout.column(align=True)      
+        row = col.row(align=True)
+        row.prop_enum(context.scene, "workplane_preview_mode", 'FULL')
+        row.prop_enum(context.scene, "workplane_preview_mode", 'SIMPLE')
         layout.prop(context.scene, "workplane_visible", toggle=False, text="Display Workplane") 
-           
+
         col = layout.column(align=True)        
         col.operator("transform.workplane_translate", text="Translate")
         col.operator("transform.workplane_rotate", text="Rotate")
