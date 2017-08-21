@@ -26,7 +26,7 @@ Here is a mini example, set workplane to polygon, inset face then move the newly
 
 
 ## Installation
-Download a clone as zip from here: [Download ZIP](https://github.com/BenjaminSauder/Workplane/blob/master/release/workplane.zip)
+Download a clone as zip from here: [Download ZIP](https://github.com/BenjaminSauder/Workplane/raw/master/release/workplane.zip)
 
 Go to User Preferences > Add-ons > 3D View > Workplane
 
