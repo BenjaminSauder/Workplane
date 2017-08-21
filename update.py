@@ -6,8 +6,9 @@ import mathutils
 from mathutils import Matrix, Vector
 
 import workplane.draw
+import workplane.data
+from workplane.data import work_plane
 from . import util
-from workplane.data import *
 
 X = Vector((1,0,0))
 Y = Vector((0,1,0))
@@ -32,7 +33,7 @@ class WorkPlaneUpdater(bpy.types.Operator):
         WorkPlaneUpdater.Running = False 
         
     def invoke(self, context, event):        
-        print("STARTED UPDATER")
+        #print("STARTED UPDATER")
         WorkPlaneUpdater.Running = True   
 
         self.grid_enabled = True
@@ -75,16 +76,16 @@ class WorkPlaneUpdater(bpy.types.Operator):
                     workplane.draw.disable()
 
                 #take care to restore the grid in sceneview
-                if not self.grid_enabled:
+                if not self.grid_enabled:                    
                     self.grid_enabled = True
                     self.show_grid()                                     
                                 
             else:                          
                 #store the grid settings after entering workplane mode
-                if self.grid_enabled:
-                    self.store_grid()
+                if self.grid_enabled:                    
+                    workplane.data.set_grid_view3d()
                     self.grid_enabled = False
-                self.hide_grid()
+                    self.hide_grid()
 
                 self.set_orientation(self.space, WorkPlaneUpdater.current_view)
       
@@ -98,7 +99,7 @@ class WorkPlaneUpdater(bpy.types.Operator):
         view_rotation = rv3d.view_rotation.to_matrix()
         view_dir = view_rotation * Z
         
-        M = WorkPlaneData.get_matrix().to_3x3()
+        M = workplane.data.get_matrix().to_3x3()
                         
         x = math.fabs((M*X).dot(view_dir))
         y = math.fabs((M*Y).dot(view_dir))
@@ -122,7 +123,7 @@ class WorkPlaneUpdater(bpy.types.Operator):
         constraints, workplane_matrix = WorkPlaneUpdater.get_orientation_constraints_and_matrix(rv3d)
         
         workplane.draw.matrix = workplane_matrix
-        workplane.draw.matrix.translation = WorkPlaneData.get_matrix().translation
+        workplane.draw.matrix.translation = workplane.data.get_matrix().translation
         
         global active_plane
         active_plane = "XY"
@@ -138,26 +139,19 @@ class WorkPlaneUpdater(bpy.types.Operator):
             workplane.draw.matrix = workplane_matrix * rot
         
         
-        WorkPlaneData.set_view_matrix(workplane.draw.matrix)
+        workplane.data.set_view_matrix(workplane.draw.matrix)
         workplane.draw.enable()
         bpy.context.scene.update()
 
-    def hide_grid(self):
-        bpy.context.space_data.show_floor  = False
-        bpy.context.space_data.show_axis_x = False
-        bpy.context.space_data.show_axis_y = False
-        bpy.context.space_data.show_axis_z = False
 
-    def store_grid(self):
-        bpy.types.Scene.workplane_grid_prefs = (
-            bpy.context.space_data.show_floor,  
-            bpy.context.space_data.show_axis_x,
-            bpy.context.space_data.show_axis_y,
-            bpy.context.space_data.show_axis_z
-        )
+    def set_grid_state(self, state):        
+        bpy.context.space_data.show_floor  = state[0]
+        bpy.context.space_data.show_axis_x = state[1]
+        bpy.context.space_data.show_axis_y = state[2]
+        bpy.context.space_data.show_axis_z = state[3]
+
+    def hide_grid(self):
+        self.set_grid_state((False, False, False, False))
     
     def show_grid(self):
-        bpy.context.space_data.show_floor  = bpy.types.Scene.workplane_grid_prefs[0]
-        bpy.context.space_data.show_axis_x = bpy.types.Scene.workplane_grid_prefs[1]
-        bpy.context.space_data.show_axis_y = bpy.types.Scene.workplane_grid_prefs[2]
-        bpy.context.space_data.show_axis_z = bpy.types.Scene.workplane_grid_prefs[3]
+        self.set_grid_state(workplane.data.get_grid_view3d())

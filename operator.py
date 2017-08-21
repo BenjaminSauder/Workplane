@@ -2,13 +2,12 @@ import bpy
 from mathutils import Matrix, Vector
 
 import workplane.util
-from workplane.data import *
+import workplane.data
+from workplane.data import work_plane
 from workplane.update import *
 
-def ensure_updater_running():
-    #print("running: " + str(WorkPlaneUpdater.Running))    
-    if not WorkPlaneUpdater.Running:
-        print( bpy.context.space_data.type, bpy.context.area.type )
+def ensure_updater_running():     
+    if not WorkPlaneUpdater.Running:        
         bpy.ops.workplane.internal_workplane_updater()
 
 class SetWorkPlane(bpy.types.Operator):
@@ -105,7 +104,7 @@ class SetWorkPlane(bpy.types.Operator):
     def set_workplane_matrix(self, matrix, center):
         matrix = matrix.to_4x4()
         matrix.translation = center
-        WorkPlaneData.set_matrix(matrix) 
+        workplane.data.set_matrix(matrix) 
         
     
     def set_transform_orientation(self, context, transform_orientation):
@@ -312,7 +311,7 @@ class WorkplaneShow(bpy.types.Operator):
     def execute(self, context):
         ensure_updater_running()
 
-        WorkPlaneData.set_visibility(True)
+        workplane.data.set_visibility(True)
         #context.scene.workplane_visible = True
         return {"FINISHED"}
 
@@ -331,7 +330,7 @@ class WorkplaneHide(bpy.types.Operator):
     def execute(self, context):
         ensure_updater_running()
 
-        WorkPlaneData.set_visibility(False)
+        workplane.data.set_visibility(False)
         #context.scene.workplane_visible = False
         return {"FINISHED"}
 

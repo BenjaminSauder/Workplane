@@ -8,7 +8,6 @@ from mathutils.geometry import intersect_line_plane
 
 import workplane.update
 import workplane.util
-from workplane.data import WorkPlaneData
 
 init = False
 handle_view = None
@@ -19,14 +18,13 @@ def tag_redraw_all_view3d():
     workplane.util.all_view3d( lambda region: region.tag_redraw() )
 
 
-
 def setup():
     global init
     if init:
         return
     init = True
 
-    view_matrix = WorkPlaneData.get_view_matrix()
+    view_matrix = workplane.data.get_view_matrix()
 
     zero = Matrix()
     zero.zero()
@@ -84,7 +82,7 @@ def screen_coord_to_workplane_intersection(region, rv3d, co):
 
 def draw_callback_view():
 
-    if not WorkPlaneData.get_visibility():
+    if not workplane.data.get_visibility():
         return
 
     if not workplane.update.WorkPlaneUpdater.Running:

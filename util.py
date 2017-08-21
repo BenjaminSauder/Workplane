@@ -1,6 +1,8 @@
 import bpy
 
-from workplane.data import *
+from mathutils import Matrix, Vector
+import workplane.data
+
 
 def all_view3d(func):
     context = bpy.context
@@ -15,10 +17,10 @@ def all_view3d(func):
 
 
 def has_valid_workplane(context):
-    if work_plane in context.scene.orientations:
+    if workplane.data.work_plane in context.scene.orientations:
         M = Matrix()
         M.zero()
-        return M != WorkPlaneData.get_matrix()
+        return M != workplane.data.get_matrix()
         
     return False
 
