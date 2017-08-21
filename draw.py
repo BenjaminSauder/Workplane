@@ -108,8 +108,11 @@ def draw_callback_view():
 
     coords = (top, right, bottom, left)
 
+    #grab intersection of workplane and screen center, and round to neares even
     middle = screen_coord_to_workplane_intersection(region, rv3d, center)
-
+    v = matrix.inverted_safe() * middle
+    middle = matrix * Vector((round(v.x), round(v.y), 0))
+    
     #matrix.translation = middle
     #draw_point_3d(magenta, middle)
 
