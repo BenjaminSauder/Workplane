@@ -84,7 +84,7 @@ class SetWorkPlane(bpy.types.Operator):
         ensure_updater_running()
 
         workplane.data.set_user_transform_orientation()
-        print( workplane.data.get_user_transform_orientation() )
+        #print( workplane.data.get_user_transform_orientation() )
         #print (bpy.ops.transform.set_workplane.poll())
         #print("--- invoke ---")
                    
@@ -354,7 +354,7 @@ class WorkplaneDisable(bpy.types.Operator):
         
         if t_o == workplane.data.work_plane:
             t_o = 'GLOBAL'
-            
+
         try:
             bpy.context.space_data.transform_orientation = t_o
         except Exception as e:
