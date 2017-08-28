@@ -1,6 +1,6 @@
 import bpy
 
-      
+import workplane.operator      
 import workplane.draw
 
 class WorkplanePanel():
@@ -17,19 +17,27 @@ class WorkplanePanel():
 
         col = layout.column(align=True)        
         col.operator("transform.workplane_set", text="Set workplane")
-        col.operator("transform.workplane_disable", text="Disable workplane")
+        #col.operator("transform.workplane_disable", text="Disable workplane")
                 
         col = layout.column(align=True)      
         row = col.row(align=True)
-        row.prop_enum(context.scene, "workplane_preview_mode", 'FULL')
-        row.prop_enum(context.scene, "workplane_preview_mode", 'SIMPLE')
-        layout.prop(context.scene, "workplane_visible", toggle=False, text="Display Workplane") 
+        row.prop_enum(context.scene.workplane, "preview_mode", 'FULL')
+        row.prop_enum(context.scene.workplane, "preview_mode", 'SIMPLE')
+        col.enabled = workplane.operator.working_in_workplane(context) 
+        
+        col = layout.column(align=True) 
+        col.prop(context.scene.workplane, "active", toggle=False, text="Use Workplane") 
+        col.enabled = workplane.operator.has_workplane(context) 
+
+        col = layout.column(align=True) 
+        col.prop(context.scene.workplane, "visible", toggle=False, text="Display Workplane") 
+        col.enabled = workplane.operator.working_in_workplane(context) 
 
         col = layout.column(align=True)        
         col.operator("transform.workplane_translate", text="Translate")
         col.operator("transform.workplane_rotate", text="Rotate")
         col.operator("transform.workplane_scale", text="Scale") 
-
+        col.operator("transform.workplane_extrude", text="Extrude")
 
               
               

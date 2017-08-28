@@ -3,7 +3,7 @@ bl_info = {
     "category": "3D View",
     "author": "Benjamin Sauder",
     "description": "Allows for quicker workflow using move/rotate/scale on a user defined workplane",
-    "version": (0, 1),
+    "version": (0, 2),
     "location": "View3D > Tool Shelf",
 }
 
@@ -38,6 +38,7 @@ classes = [
     operator.WorkplaneTranslate,
     operator.WorkplaneRotate,
     operator.WorkplaneScale,
+    operator.WorkplaneExtrude,
     operator.WorkplaneShow,
     operator.WorkplaneHide,    
     ui.WorkplanePanelTransform,
@@ -46,6 +47,7 @@ classes = [
 
 def register():
 
+    '''
     bpy.types.Scene.workplane_matrix = bpy.props.FloatVectorProperty(
             name="workplane_matrix",
             size=16,
@@ -67,10 +69,13 @@ def register():
   
 
     bpy.types.Scene.workplane_preview_mode = bpy.props.EnumProperty(items=draw.MODE)
+    '''
    
 
     for c in classes:
         bpy.utils.register_class(c)
+
+    bpy.types.Scene.workplane = bpy.props.PointerProperty(type=data.WorkplaneProperties)    
 
     #bpy.types.Scene.workplane_props = bpy.props.PointerProperty(
     #    name="Workplane props", type=data.WorkplaneProperties)
@@ -88,6 +93,8 @@ def register():
 def unregister():
     update.WorkPlaneUpdater.Running = False
     draw.disable()
+
+    del bpy.types.Scene.workplane
      
     for c in classes:
         bpy.utils.unregister_class(c)

@@ -76,6 +76,7 @@ class SetWorkPlane(bpy.types.Operator):
         matrix = self.set_transform_orientation(context, self.transform_orientation)
         self.set_workplane_matrix(matrix, center)
         
+        bpy.context.workplane.active = True        
         return {'FINISHED'}
     
 
@@ -83,6 +84,8 @@ class SetWorkPlane(bpy.types.Operator):
 
         ensure_updater_running()
 
+        bpy.context.scene.workplane.active = True
+        workplane.data.set_grid_view3d()        
         workplane.data.set_user_transform_orientation()
         #print( workplane.data.get_user_transform_orientation() )
         #print (bpy.ops.transform.set_workplane.poll())
@@ -99,6 +102,7 @@ class SetWorkPlane(bpy.types.Operator):
         self.set_workplane_matrix(matrix, center)
         
         context.window_manager.modal_handler_add(self)
+        
         
         #bpy.ops.workplane.show()
         return {'RUNNING_MODAL'}    
@@ -221,11 +225,17 @@ class SetWorkPlane(bpy.types.Operator):
 
 
 def working_in_workplane(context):
-
     if (context.space_data.current_orientation is not None and
         WorkPlaneUpdater.current_view is not None):
         return context.space_data.current_orientation.name == workplane.data.work_plane
     return False
+
+def has_workplane(context):
+    if (WorkPlaneUpdater.current_view is not None):
+        return context.scene.orientations.get(workplane.data.work_plane) != None
+
+    return False
+
 
 class WorkplaneTranslate(bpy.types.Operator):
     bl_idname = "transform.workplane_translate"
@@ -299,8 +309,33 @@ class WorkplaneScale(bpy.types.Operator):
         bpy.ops.transform.resize('INVOKE_DEFAULT')
         return {"FINISHED"}
 
+class WorkplaneExtrude(bpy.types.Operator):
+    bl_idname = "transform.workplane_extrude"
+    bl_label = "Extudes on the Workplane"
+    bl_description = ""
+    bl_options = {"REGISTER"}
+    
+    @classmethod
+    def poll(cls, context):
+        result = bpy.ops.view3d.edit_mesh_extrude_move_normal.poll()
+        return result
+        
+    def invoke(self, context, event):    
+        ensure_updater_running()
 
-   
+        if working_in_workplane(context):
+            print("foooo")
+            constraints, workplane_matrix = WorkPlaneUpdater.get_orientation_constraints_and_matrix(WorkPlaneUpdater.current_view)
+            bpy.ops.mesh.extrude_region()
+            bpy.ops.transform.translate('INVOKE_DEFAULT', constraint_axis=constraints, constraint_orientation=work_plane)    
+            return {"FINISHED"}
+                
+        bpy.ops.view3d.edit_mesh_extrude_move_normal('INVOKE_DEFAULT')
+        return {"FINISHED"}
+
+#bpy.ops.mesh.extrude_region_move(MESH_OT_extrude_region={"mirror":False}, TRANSFORM_OT_translate={"value":(-4.13928, -5.01428, -0.726659), "constraint_axis":(False, False, False), "constraint_orientation":'NORMAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "gpencil_strokes":False, "texture_space":False, "remove_on_cancel":False, "release_confirm":False})
+
+
 class WorkplaneShow(bpy.types.Operator):
     bl_idname = "workplane.show"
     bl_label = "Show Workplane"
@@ -335,6 +370,7 @@ class WorkplaneHide(bpy.types.Operator):
 
         workplane.data.set_visibility(False)
         #context.scene.workplane_visible = False
+
         return {"FINISHED"}
 
 class WorkplaneDisable(bpy.types.Operator):

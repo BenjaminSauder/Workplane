@@ -8,15 +8,13 @@ from mathutils.geometry import intersect_line_plane
 
 import workplane.update
 import workplane.util
+import workplane.data
 
 init = False
 handle_view = None
 matrix = Matrix()
 
-MODE = [
-    ("SIMPLE", "Simple", "", 1),
-    ("FULL", "Full", "", 2)
-    ]
+
 
 #some code here is from space_view3d_math_vis
 def tag_redraw_all_view3d():
@@ -154,7 +152,9 @@ def draw_callback_view():
     offset = Vector((-half, -half, 0))
    
     gridmatrix = matrix.copy()
-    gridmatrix.translation = middle
+
+    if not workplane.data.is_simple_preview():
+        gridmatrix.translation = middle
 
     for i in range(0, amount):
     

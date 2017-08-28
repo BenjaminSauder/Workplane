@@ -68,22 +68,23 @@ class WorkPlaneUpdater(bpy.types.Operator):
                 WorkPlaneUpdater.current_view = view     
 
             workplane_exists = work_plane in bpy.context.scene.orientations            
-            if (self.space is None or self.space.current_orientation is None or 
+            if (workplane_exists == False or 
+                self.space is None or self.space.current_orientation is None or 
                 self.space.current_orientation.name != work_plane or 
                 WorkPlaneUpdater.current_view is None):             
-                
-                if workplane_exists:
-                    workplane.draw.disable()
+                               
+                workplane.draw.disable()
 
                 #take care to restore the grid in sceneview
                 if not self.grid_enabled:                    
                     self.grid_enabled = True
                     self.show_grid()                                     
                                 
-            else:                          
-                #store the grid settings after entering workplane mode
-                if self.grid_enabled:                    
-                    workplane.data.set_grid_view3d()
+            else:    
+                                                      
+                #workplane.data.set_grid_view3d()
+                
+                if self.grid_enabled:
                     self.grid_enabled = False
                     self.hide_grid()
 
@@ -155,3 +156,25 @@ class WorkPlaneUpdater(bpy.types.Operator):
     
     def show_grid(self):
         self.set_grid_state(workplane.data.get_grid_view3d())
+
+    @staticmethod     
+    def enable_workplane():
+        try:
+            workplane.data.set_grid_view3d()
+            workplane.data.set_user_transform_orientation()
+            bpy.context.space_data.transform_orientation = work_plane
+        except Exception as e:
+            pass
+
+    @staticmethod
+    def disable_workplane():
+        transform_orientation = workplane.data.get_user_transform_orientation()
+        
+        if transform_orientation == workplane.data.work_plane:
+            transform_orientation = 'GLOBAL'
+
+        try:
+            bpy.context.space_data.transform_orientation = transform_orientation
+        except Exception as e:
+            bpy.context.space_data.transform_orientation = 'GLOBAL'
+        
