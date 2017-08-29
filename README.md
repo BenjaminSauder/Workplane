@@ -9,12 +9,13 @@ This addon does not recreate the default operations like translate/rotate/scale 
 
 Release Log:
 
-0.2: 
-	- added toggle to turn off the workplane in the addon-panel 
-	- added simple draw mode where the workplane just stays where it was originall defined
-	- added extrude support
+0.2: 	
+- added toggle to turn off the workplane in the addon-panel 
+- added simple draw mode where the workplane just stays where it was originall defined
+- added extrude support
+
 0.1:
-	-initial release
+-initial release
 
 
 ## Usage
@@ -32,6 +33,7 @@ Here is a mini example, set workplane to polygon, inset face then move the newly
 ![example](https://github.com/BenjaminSauder/Workplane/blob/master/doc/example.gif)
 
 Showing the extrude feature 
+
 ![extrude](https://github.com/BenjaminSauder/Workplane/blob/master/doc/extrude.gif)
 
 
