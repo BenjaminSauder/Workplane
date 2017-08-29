@@ -103,8 +103,6 @@ class SetWorkPlane(bpy.types.Operator):
         
         context.window_manager.modal_handler_add(self)
         
-        
-        #bpy.ops.workplane.show()
         return {'RUNNING_MODAL'}    
     
     
@@ -335,69 +333,4 @@ class WorkplaneExtrude(bpy.types.Operator):
             return {"FINISHED"}
                 
         bpy.ops.view3d.edit_mesh_extrude_move_normal('INVOKE_DEFAULT')
-        return {"FINISHED"}
-
-#bpy.ops.mesh.extrude_region_move(MESH_OT_extrude_region={"mirror":False}, TRANSFORM_OT_translate={"value":(-4.13928, -5.01428, -0.726659), "constraint_axis":(False, False, False), "constraint_orientation":'NORMAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "gpencil_strokes":False, "texture_space":False, "remove_on_cancel":False, "release_confirm":False})
-
-
-class WorkplaneShow(bpy.types.Operator):
-    bl_idname = "workplane.show"
-    bl_label = "Show Workplane"
-    bl_description = ""
-    bl_options = {'REGISTER', 'UNDO'}
-
-    @classmethod
-    def poll(cls, context):
-        return workplane.util.has_valid_workplane(context)
-    
-    def execute(self, context):
-        ensure_updater_running()
-
-        workplane.data.set_visibility(True)
-        #context.scene.workplane_visible = True
-        return {"FINISHED"}
-
-    
-    
-class WorkplaneHide(bpy.types.Operator):
-    bl_idname = "workplane.hide"
-    bl_label = "Hide Workplane"
-    bl_description = ""
-    bl_options = {"REGISTER"}
-
-    @classmethod
-    def poll(cls, context):
-        return workplane.util.has_valid_workplane(context)
-
-    def execute(self, context):
-        ensure_updater_running()
-
-        workplane.data.set_visibility(False)
-        #context.scene.workplane_visible = False
-
-        return {"FINISHED"}
-
-class WorkplaneDisable(bpy.types.Operator):
-    bl_idname = "transform.workplane_disable"
-    bl_label = "Disables the Workplane"
-    bl_description = ""
-    bl_options = {"REGISTER"}
-    
-    @classmethod
-    def poll(cls, context):
-        return working_in_workplane(context)
-        
-    def invoke(self, context, event):    
-        ensure_updater_running()
-
-        t_o = workplane.data.get_user_transform_orientation()
-        
-        if t_o == workplane.data.work_plane:
-            t_o = 'GLOBAL'
-
-        try:
-            bpy.context.space_data.transform_orientation = t_o
-        except Exception as e:
-            bpy.context.space_data.transform_orientation = 'GLOBAL'
-       
         return {"FINISHED"}
