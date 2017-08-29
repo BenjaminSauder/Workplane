@@ -12,7 +12,7 @@ def ensure_updater_running():
 
 class SetWorkPlane(bpy.types.Operator):
     """Sets a new workplane orientation"""
-
+    bl_description = "Sets the workplane to the current selection"
     bl_idname = "transform.workplane_set"
     bl_label = "Set the Workplane"
     bl_options = {'REGISTER', 'UNDO'}
@@ -238,6 +238,7 @@ def has_workplane(context):
 
 
 class WorkplaneTranslate(bpy.types.Operator):
+    bl_description = "Translates (move) selected items with workplane constraints"
     bl_idname = "transform.workplane_translate"
     bl_label = "Translate on the Workplane"
     bl_description = ""
@@ -263,6 +264,7 @@ class WorkplaneTranslate(bpy.types.Operator):
 
 
 class WorkplaneRotate(bpy.types.Operator):
+    bl_description = "Rotate selected items with workplane constraints"
     bl_idname = "transform.workplane_rotate"
     bl_label = "Rotates on the Workplane"
     bl_description = ""
@@ -287,6 +289,7 @@ class WorkplaneRotate(bpy.types.Operator):
 
             
 class WorkplaneScale(bpy.types.Operator):
+    bl_description = "Scale (resize) selected items with workplane constraints"
     bl_idname = "transform.workplane_scale"
     bl_label = "Scales on the Workplane"
     bl_description = ""
@@ -310,6 +313,7 @@ class WorkplaneScale(bpy.types.Operator):
         return {"FINISHED"}
 
 class WorkplaneExtrude(bpy.types.Operator):
+    bl_description = "Extrude and move with workplane constraints"
     bl_idname = "transform.workplane_extrude"
     bl_label = "Extudes on the Workplane"
     bl_description = ""
