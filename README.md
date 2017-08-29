@@ -6,6 +6,7 @@ The main idea is that it allows for quickly setting up a custom transform orient
 
 This addon does not recreate the default operations like translate/rotate/scale it merely calls the ones blender offers and sets the constraint axis and transform orientation for you.
 
+Get it here: [Download ZIP](https://github.com/BenjaminSauder/Workplane/raw/master/release/workplane.zip)
 
 Release Log:
 
@@ -39,7 +40,9 @@ Showing the extrude feature
 
 
 ## Installation
-Download a clone as zip from here: [Download ZIP](https://github.com/BenjaminSauder/Workplane/raw/master/release/workplane.zip)
+Grab it here: [Download ZIP](https://github.com/BenjaminSauder/Workplane/raw/master/release/workplane.zip)
+
+Go to User Preferences > Install from file 
 
 Go to User Preferences > Add-ons > 3D View > Workplane
 
