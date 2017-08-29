@@ -15,7 +15,7 @@ Release Log:
 - added extrude support
 
 0.1:
--initial release
+- initial release
 
 
 ## Usage
