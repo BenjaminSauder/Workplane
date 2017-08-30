@@ -25,8 +25,8 @@ def WriteDirectoryToZipFile( zipHandle, srcPath, zipLocalPath = "", zipOperation
 		p = os.path.join( zipLocalPath, root [ ( len( basePath ) + 1 ) : ] )
 		# add dir
 		
-		if p == os.path.split(root)[1]:
-			p = ""
+		#if p == os.path.split(root)[1]:
+		#	p = ""
 
 		zipHandle.write( root, p, zipOperation )
 		# add files
