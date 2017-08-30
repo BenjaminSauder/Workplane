@@ -33,14 +33,11 @@ import bpy
 classes = [
     data.WorkplaneProperties, 
     update.WorkPlaneUpdater,
-    operator.SetWorkPlane,
-    operator.WorkplaneDisable,
+    operator.SetWorkPlane,   
     operator.WorkplaneTranslate,
     operator.WorkplaneRotate,
     operator.WorkplaneScale,
-    operator.WorkplaneExtrude,
-    operator.WorkplaneShow,
-    operator.WorkplaneHide,    
+    operator.WorkplaneExtrude,  
     ui.WorkplanePanelTransform,
     ui.WorkplanePanelMeshEdit,
 ]
