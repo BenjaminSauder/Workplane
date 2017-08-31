@@ -4,8 +4,8 @@ from mathutils import Matrix, Vector
 work_plane = "WorkPlane"
 
 DRAW_MODE = [
-    ("SIMPLE", "Simple", "", 1),
-    ("FULL", "Full", "", 2)
+    ("FULL", "Full", "", 1),
+    ("SIMPLE", "Simple", "", 2)
     ]
 
 class WorkplaneProperties(bpy.types.PropertyGroup):
@@ -34,8 +34,10 @@ class WorkplaneProperties(bpy.types.PropertyGroup):
 
     def active_set(self, value):
         import workplane.update
+        import workplane.operator
 
-        if value:
+        if value:            
+            workplane.operator.ensure_updater_running()
             workplane.update.WorkPlaneUpdater.enable_workplane()
         else:
             workplane.update.WorkPlaneUpdater.disable_workplane()
