@@ -21,20 +21,20 @@ class WorkPlaneUpdater(bpy.types.Operator):
     bl_label = "internal"
     bl_options = {"REGISTER", "INTERNAL"}
    
+    context = None
     scene = None
     current_view = None
     Running = False
-    
-    #@classmethod
-    #def poll(cls, context):
-    #    return not WorkPlaneUpdater.Running
-
+    space = None
+   
     def cancel(self, context):
         WorkPlaneUpdater.Running = False 
         
     def invoke(self, context, event):        
-        #print("STARTED UPDATER")
+        if WorkPlaneUpdater.Running:
+            return {"FINISHED"}
         WorkPlaneUpdater.Running = True   
+        #print("STARTED UPDATER")
 
         self.grid_enabled = True
         self.space = None
@@ -45,13 +45,16 @@ class WorkPlaneUpdater(bpy.types.Operator):
         wm.modal_handler_add(self)
         
         self.scene = context.scene
+
+        if self.scene.workplane.active:
+            WorkPlaneUpdater.enable_workplane()
         
         return {"RUNNING_MODAL"}
     
 
     def modal(self, context, event):
         if not WorkPlaneUpdater.Running:
-            #self.work_plane_drawer.hide()
+            WorkPlaneUpdater.show_grid()            
             return {'CANCELLED'}
          
         if context.scene != self.scene or self.scene == None:
@@ -63,14 +66,14 @@ class WorkPlaneUpdater(bpy.types.Operator):
             #collect the correct view to update the workplane..
             space, view = util.get_space_and_view(context, event.mouse_x, event.mouse_y)
             if space is not None:
-                self.space = space
+                WorkPlaneUpdater.space = space
             if view is not None:
                 WorkPlaneUpdater.current_view = view     
 
             workplane_exists = work_plane in bpy.context.scene.orientations            
             if (workplane_exists == False or 
-                self.space is None or self.space.current_orientation is None or 
-                self.space.current_orientation.name != work_plane or 
+                WorkPlaneUpdater.space is None or WorkPlaneUpdater.space.current_orientation is None or 
+                WorkPlaneUpdater.space.current_orientation.name != work_plane or 
                 WorkPlaneUpdater.current_view is None):             
                                
                 workplane.draw.disable()
@@ -78,17 +81,14 @@ class WorkPlaneUpdater(bpy.types.Operator):
                 #take care to restore the grid in sceneview
                 if not self.grid_enabled:                    
                     self.grid_enabled = True
-                    self.show_grid()                                     
+                    WorkPlaneUpdater.show_grid()                                     
                                 
-            else:    
-                                                      
-                #workplane.data.set_grid_view3d()
-                
+            else:
                 if self.grid_enabled:
                     self.grid_enabled = False
-                    self.hide_grid()
+                    WorkPlaneUpdater.hide_grid()
 
-                self.set_orientation(self.space, WorkPlaneUpdater.current_view)
+                self.set_orientation(WorkPlaneUpdater.space, WorkPlaneUpdater.current_view)
       
         return {"PASS_THROUGH"}
     
@@ -145,25 +145,32 @@ class WorkPlaneUpdater(bpy.types.Operator):
         bpy.context.scene.update()
 
 
-    def set_grid_state(self, state):        
-        bpy.context.space_data.show_floor  = state[0]
-        bpy.context.space_data.show_axis_x = state[1]
-        bpy.context.space_data.show_axis_y = state[2]
-        bpy.context.space_data.show_axis_z = state[3]
+    @staticmethod     
+    def set_grid_state(state):        
+        WorkPlaneUpdater.space.show_floor  = state[0]
+        WorkPlaneUpdater.space.show_axis_x = state[1]
+        WorkPlaneUpdater.space.show_axis_y = state[2]
+        WorkPlaneUpdater.space.show_axis_z = state[3]
 
-    def hide_grid(self):
-        self.set_grid_state((False, False, False, False))
+    @staticmethod     
+    def hide_grid():
+        WorkPlaneUpdater.set_grid_state((False, False, False, False))
     
-    def show_grid(self):
-        self.set_grid_state(workplane.data.get_grid_view3d())
+    @staticmethod     
+    def show_grid():
+        WorkPlaneUpdater.set_grid_state(workplane.data.get_grid_view3d())
 
     @staticmethod     
     def enable_workplane():
         try:
-            workplane.data.set_grid_view3d()
-            workplane.data.set_user_transform_orientation()
+            from workplane.operator import working_in_workplane
+            if not working_in_workplane(bpy.context):
+                workplane.data.set_grid_view3d()
+                workplane.data.set_user_transform_orientation()
+            
             bpy.context.space_data.transform_orientation = work_plane
         except Exception as e:
+            #print(e)
             pass
 
     @staticmethod
@@ -176,5 +183,6 @@ class WorkPlaneUpdater(bpy.types.Operator):
         try:
             bpy.context.space_data.transform_orientation = transform_orientation
         except Exception as e:
-            bpy.context.space_data.transform_orientation = 'GLOBAL'
+            if bpy.context.space_data != None:
+                bpy.context.space_data.transform_orientation = 'GLOBAL'
         

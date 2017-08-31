@@ -6,10 +6,6 @@ import workplane.data
 from workplane.data import work_plane
 from workplane.update import *
 
-def ensure_updater_running():     
-    if not WorkPlaneUpdater.Running:        
-        bpy.ops.workplane.internal_workplane_updater()
-
 class SetWorkPlane(bpy.types.Operator):
     """Sets a new workplane orientation"""
     bl_description = "Sets the workplane to the current selection"
@@ -76,7 +72,7 @@ class SetWorkPlane(bpy.types.Operator):
         matrix = self.set_transform_orientation(context, self.transform_orientation)
         self.set_workplane_matrix(matrix, center)
         
-        bpy.context.workplane.active = True        
+        bpy.context.scene.workplane.active = True        
         return {'FINISHED'}
     
 
@@ -85,8 +81,11 @@ class SetWorkPlane(bpy.types.Operator):
         ensure_updater_running()
 
         bpy.context.scene.workplane.active = True
-        workplane.data.set_grid_view3d()        
-        workplane.data.set_user_transform_orientation()
+
+        if not working_in_workplane(context):
+            workplane.data.set_grid_view3d()        
+            workplane.data.set_user_transform_orientation()
+        
         #print( workplane.data.get_user_transform_orientation() )
         #print (bpy.ops.transform.set_workplane.poll())
         #print("--- invoke ---")
@@ -220,7 +219,9 @@ class SetWorkPlane(bpy.types.Operator):
             else:
                 return active_object.matrix_world.translation
 
-
+def ensure_updater_running():     
+    if not WorkPlaneUpdater.Running:
+        bpy.ops.workplane.internal_workplane_updater()
 
 def working_in_workplane(context):
     if (context.space_data.current_orientation is not None and
@@ -231,7 +232,6 @@ def working_in_workplane(context):
 def has_workplane(context):
     if (WorkPlaneUpdater.current_view is not None):
         return context.scene.orientations.get(workplane.data.work_plane) != None
-
     return False
 
 
