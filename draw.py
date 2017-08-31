@@ -158,13 +158,16 @@ def draw_callback_view():
 
     for i in range(0, amount):
     
-        #bell like graph shape for the alpha to get nice fading
         scale = 0.5
         x = i / float(amount)
-        alpha = math.pow(4, scale) * math.pow(x *(1-x), scale)        
         
+        #bell like graph shape for the alpha to get nice fading:
+        #alpha = math.pow(4, scale) * math.pow(x *(1-x), scale) 
 
-        gray = (1.0, 1.0, 1.0, alpha * 0.2 )
+        #triang graph: 
+        alpha = tri(0.5, x * 2 * 3.141) * 0.5 + 0.5
+
+        gray = (1.0, 1.0, 1.0, alpha * 0.2)
 
         if i % step != 0:
             continue
@@ -208,6 +211,20 @@ def draw_callback_view():
 red   = (1.0, 0, 0, 0.2)
 green = (0, 1.0, 0, 0.2)
 blue  = (0, 0, 1.0, 0.2)
+
+#merci: http://www.iquilezles.org/apps/graphtoy/utils.js?v=1
+def tri(a,x):
+    x = x / (2.0 * 3.141)
+    x = x % 1.0
+    if x < 0.0:
+        x += 1.0
+
+    if x<a:
+        x=x/a
+    else:
+        x = 1.0-(x-a)/(1.0-a)
+    return -1.0+2.0*x
+
 
 def draw_basis_colors(length):
     thickness = 1.5
