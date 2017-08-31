@@ -167,6 +167,8 @@ def draw_callback_view():
         #triang graph: 
         alpha = tri(0.5, x * 2 * 3.141) * 0.5 + 0.5
 
+        #gray = bpy.context.user_preferences.themes[0].view_3d.grid
+        #gray = (gray.r, gray.g, gray.b, alpha)
         gray = (1.0, 1.0, 1.0, alpha * 0.2)
 
         if i % step != 0:
