@@ -17,10 +17,11 @@ def all_view3d(func):
 
 
 def has_valid_workplane(context):
-    if workplane.data.work_plane in context.scene.orientations:
-        M = Matrix()
-        M.zero()
-        return M != workplane.data.get_matrix()
+    for slot in bpy.context.scene.transform_orientation_slots:
+        if slot.type == workplane.data.work_plane: 
+            M = Matrix()
+            M.zero()
+            return M != workplane.data.get_matrix()
         
     return False
 
@@ -54,3 +55,5 @@ def get_quadview_index(context, x, y):
 
                     return (area.spaces.active, None if is_quadview else i)
     return (None, None)
+
+

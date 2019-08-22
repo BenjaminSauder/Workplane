@@ -1,31 +1,33 @@
 import bpy
 from mathutils import Matrix, Vector
 
+from . import main
+
 work_plane = "WorkPlane"
 
 DRAW_MODE = [
-    ("FULL", "Full", "", 1),
-    ("SIMPLE", "Simple", "", 2)
+    ("SIMPLE", "Simple", "", 1),
+    ("FULL", "Full", "", 2)
     ]
 
-class WorkplaneProperties(bpy.types.PropertyGroup):
+
+class WP_OT_WorkplaneProperties(bpy.types.PropertyGroup):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
 
-    matrix = bpy.props.FloatVectorProperty(
+    matrix : bpy.props.FloatVectorProperty(
             name="matrix",
             size=16,
             subtype="MATRIX")            
                      
-    viewmatrix = bpy.props.FloatVectorProperty(
+    viewmatrix : bpy.props.FloatVectorProperty(
             name="viewmatrix",
             size=16,
             subtype="MATRIX")        
 
-    grid_prefs = bpy.props.BoolVectorProperty(
+    grid_prefs : bpy.props.BoolVectorProperty(
             name="grid_prefs",
             size=4)
-
 
     def active_get(self):
         if "active" in self:        
@@ -33,60 +35,49 @@ class WorkplaneProperties(bpy.types.PropertyGroup):
         return False
 
     def active_set(self, value):
-        import workplane.update
-        import workplane.operator
+        from . import update
 
-        if value:            
-            workplane.operator.ensure_updater_running()
-            workplane.update.WorkPlaneUpdater.enable_workplane()
+        if value:
+            update.enable_workplane()
         else:
-            workplane.update.WorkPlaneUpdater.disable_workplane()
+            update.disable_workplane()
 
         self["active"] = value
 
     
-    active = bpy.props.BoolProperty(default=True, get=active_get, set=active_set)                     
-    visible = bpy.props.BoolProperty(default=True)    
-   
-    user_transform_orientation = bpy.props.StringProperty(default="GLOBAL")  
-
-    preview_mode = bpy.props.EnumProperty(items=DRAW_MODE)
+    active : bpy.props.BoolProperty(default=True, get=active_get, set=active_set)                     
+    visible : bpy.props.BoolProperty(default=True)    
+    user_transform_orientation : bpy.props.StringProperty(default="GLOBAL")  
+    preview_mode : bpy.props.EnumProperty(items=DRAW_MODE)
    
         
 def set_matrix(matrix):
-    bpy.context.scene.workplane.matrix = flatten(matrix)
-     
+    bpy.context.scene.workplane.matrix = flatten(matrix)     
      
 def get_matrix():
-    return bpy.context.scene.workplane.matrix
-                      
-def set_view_matrix(view_matrix):
-    bpy.context.scene.workplane.viewmatrix = flatten(view_matrix)
-     
-def get_view_matrix():
-    return bpy.context.scene.workplane.viewmatrix
+    return bpy.context.scene.workplane.matrix                      
+
      
 def flatten(mat):
     dim = len(mat)
     return [mat[j][i] for i in range(dim) 
                       for j in range(dim)]
-                      
+
 def set_visibility(state):
     bpy.context.scene.workplane.visible = state
-    
+
 def get_visibility():
     return bpy.context.scene.workplane.visible
 
-
-def set_grid_view3d():   
+def store_grid_overlay_prefs():   
     bpy.context.scene.workplane.grid_prefs = (
-        bpy.context.space_data.show_floor,  
-        bpy.context.space_data.show_axis_x,
-        bpy.context.space_data.show_axis_y,
-        bpy.context.space_data.show_axis_z
+        bpy.context.space_data.overlay.show_floor,  
+        bpy.context.space_data.overlay.show_axis_x,
+        bpy.context.space_data.overlay.show_axis_y,
+        bpy.context.space_data.overlay.show_axis_z
     )
 
-def get_grid_view3d():
+def load_grid_overlay_prefs():
     return (
         bpy.context.scene.workplane.grid_prefs[0],
         bpy.context.scene.workplane.grid_prefs[1],
@@ -97,11 +88,13 @@ def get_grid_view3d():
    
 def get_user_transform_orientation():
     return bpy.context.scene.workplane.user_transform_orientation
-   
+
 def set_user_transform_orientation():
-    bpy.context.scene.workplane.user_transform_orientation = bpy.context.space_data.transform_orientation      
-   
-   
+    transform_orientation = bpy.context.scene.transform_orientation_slots[0].type
+
+    if transform_orientation != work_plane:
+        bpy.context.scene.workplane.user_transform_orientation = transform_orientation
+
 def is_simple_preview():
     return bpy.context.scene.workplane.preview_mode == "SIMPLE"
    

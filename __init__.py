@@ -1,24 +1,28 @@
 bl_info = {
     "name": "Workplane",
+    "version": (0, 1, 0),
+    "blender": (2, 80, 0),
     "category": "3D View",
     "author": "Benjamin Sauder",
     "description": "Allows for quicker workflow using move/rotate/scale on a user defined workplane",
     "version": (0, 2),
     "location": "View3D > Tool Shelf",
-    "blender": (2, 78, 0),
 }
 
 
 if "bpy" in locals():
     import importlib
+    importlib.reload(main)
     importlib.reload(data)
     importlib.reload(draw)
     importlib.reload(operator)
     importlib.reload(ui)
     importlib.reload(update)
-    importlib.reload(util)    
+    importlib.reload(util)
+    
 else:
     from . import (
+        main,
         data,
         draw,
         operator,
@@ -27,48 +31,33 @@ else:
         util
         )
   
+
 import bpy
-from bpy.app.handlers import persistent
 
 classes = [
-    data.WorkplaneProperties, 
-    update.WorkPlaneUpdater,
-    operator.SetWorkPlane,   
-    operator.WorkplaneTranslate,
-    operator.WorkplaneRotate,
-    operator.WorkplaneScale,
-    operator.WorkplaneExtrude,  
-    ui.WorkplanePanelMenu,
-    ui.WorkplanePanelTransform,
-    ui.WorkplanePanelMeshEdit,
+    data.WP_OT_WorkplaneProperties, 
+    update.WP_OT_Updater,
+    operator.WP_OT_SetWorkPlane,   
+    operator.WP_OT_WorkplaneTranslate,
+    operator.WP_OT_WorkplaneRotate,
+    operator.WP_OT_WorkplaneScale,
+    operator.WP_OT_WorkplaneExtrude,
+    ui.VIEW3D_PT_WORKINGPLANE,  
+    # ui.VIEW3D_PT_WorkplanePanelTransform,
+    # ui.VIEW3D_PT_WorkplanePanelMeshEdit,
 ]
 
-def register():
+def register():   
 
     for c in classes:
         bpy.utils.register_class(c)
 
-    bpy.types.Scene.workplane = bpy.props.PointerProperty(type=data.WorkplaneProperties)    
+    bpy.types.Scene.workplane = bpy.props.PointerProperty(type=data.WP_OT_WorkplaneProperties)    
 
-    bpy.types.VIEW3D_MT_edit_mesh_specials.append(ui.menu_func)
-
-    bpy.app.handlers.load_post.append(load_handler)
-    
-
-@persistent
-def load_handler(dummy):
-    print("Workplane Init")
-    draw.setup()
-    operator.ensure_updater_running()
-    bpy.context.scene.workplane.active = False
 
 def unregister():
-
-    update.WorkPlaneUpdater.Running = False
-    update.WorkPlaneUpdater.show_grid()            
-    draw.disable()
-
-    bpy.types.VIEW3D_MT_edit_mesh_specials.remove(ui.menu_func)
+    update.WP_OT_Updater.Running = False
+    main.draw.disable()
 
     del bpy.types.Scene.workplane
      
